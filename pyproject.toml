@@ -1,0 +1,38 @@
+[project]
+name = "gan-fashion-mnist"
+version = "0.1.0"
+description = "GAN (DCGAN) explicada paso a paso: red Generadora, red Discriminadora, funciones de pérdida y resultados sobre una categoría de Fashion-MNIST"
+readme = "README.md"
+authors = [
+    { name = "NicVar1", email = "nicolasotero20a@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "torch>=2.6",
+    "torchvision>=0.21",
+    "matplotlib>=3.9",
+    "numpy>=1.26",
+]
+
+[project.scripts]
+# Entrena la GAN y genera todas las gráficas / reportes
+gan-entrenar = "gan_fashion_mnist:main"
+# Usa un Generador ya entrenado para crear imágenes nuevas
+gan-generar = "gan_fashion_mnist.generar:main"
+# Exporta resultados y pesos a frontend/datos.js y abre el front-end en el navegador
+gan-web = "gan_fashion_mnist.web:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
+
+# PyTorch versión CPU (descarga liviana, funciona en cualquier PC).
+# Para usar la GPU NVIDIA, cambie la URL por https://download.pytorch.org/whl/cu128
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+torchvision = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GAN explicada</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <!-- ===================== Barra de navegación ===================== -->
+  <header class="barra">
+    <div class="barra-contenido">
+      <a class="marca" href="#inicio">GAN<span>explicada</span></a>
+      <nav>
+        <a href="#inicio">Idea</a>
+        <a href="#laboratorio">Laboratorio</a>
+        <a href="#arquitectura">Arquitectura</a>
+        <a href="#paso">Un paso</a>
+        <a href="#perdidas">Pérdidas</a>
+        <a href="#entrenamiento">Entrenamiento</a>
+        <a href="#pesos">Pesos</a>
+        <a href="#resultado">Resultado</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== 0. Idea general ===================== -->
+    <section id="inicio" class="seccion">
+      <p class="etiqueta">Red Generativa Adversaria · DCGAN · Fashion-MNIST</p>
+      <h1>Dos redes que compiten: una <em class="g">falsifica</em>, la otra <em class="d">detecta</em></h1>
+      <p class="intro">
+        El <strong class="g">Generador</strong> recibe números aleatorios y dibuja una prenda.
+        El <strong class="d">Discriminador</strong> mira una imagen y dice qué tan probable es que sea real.
+        Cada uno aprende de los errores del otro hasta que las imágenes falsas se parecen a las reales.
+      </p>
+      <div class="chip-categoria">Categoría usada: <strong id="nombre-categoria">…</strong>
+        <span id="detalle-categoria"></span></div>
+
+      <div class="tarjeta flujo">
+        <svg id="diagrama" viewBox="0 0 960 300" role="img" aria-label="Diagrama de la GAN"></svg>
+      </div>
+      <div class="cifras" id="cifras"></div>
+    </section>
+
+    <!-- ===================== 1. Laboratorio en vivo ===================== -->
+    <section id="laboratorio" class="seccion">
+      <p class="etiqueta">1 · Laboratorio en vivo</p>
+      <h2>Usa la red entrenada en tu navegador</h2>
+      <p class="intro">Los pesos entrenados en PyTorch se cargaron aquí y las dos redes se ejecutan en vivo.
+        Pide ruido nuevo y mira cómo se transforma, capa por capa, en una prenda. Luego mira cómo la juzga el Discriminador.</p>
+
+      <div class="controles">
+        <button class="boton primario" id="btn-ruido">Nuevo ruido z</button>
+        <button class="boton" id="btn-mover">Mover z un poco</button>
+        <span class="separador"></span>
+        <div class="segmentado" id="selector-fuente">
+          <button data-fuente="falsa" class="activo">Mostrar a D: imagen generada</button>
+          <button data-fuente="real">Mostrar a D: imagen real</button>
+        </div>
+      </div>
+
+      <div class="tubo">
+        <div class="etapa">
+          <h4>Ruido z</h4><p class="dim">100 números ~ N(0,1)</p>
+          <canvas id="cv-z" width="100" height="100"></canvas>
+        </div>
+        <div class="flecha g">Linear<br>+BN+ReLU</div>
+        <div class="etapa">
+          <h4>128 × 7 × 7</h4><p class="dim">16 de 128 mapas</p>
+          <canvas id="cv-g7" width="200" height="200"></canvas>
+        </div>
+        <div class="flecha g">ConvT<br>+BN+ReLU</div>
+        <div class="etapa">
+          <h4>64 × 14 × 14</h4><p class="dim">16 de 64 mapas</p>
+          <canvas id="cv-g14" width="200" height="200"></canvas>
+        </div>
+        <div class="flecha g">ConvT<br>+Tanh</div>
+        <div class="etapa destacada">
+          <h4 id="titulo-imagen">Imagen G(z)</h4><p class="dim">1 × 28 × 28</p>
+          <canvas id="cv-img" width="168" height="168"></canvas>
+        </div>
+        <div class="flecha d">Conv<br>+LeakyReLU</div>
+        <div class="etapa">
+          <h4>D: 64 × 14 × 14</h4><p class="dim">16 de 64 filtros</p>
+          <canvas id="cv-d14" width="200" height="200"></canvas>
+        </div>
+        <div class="flecha d">Conv<br>+BN+LReLU</div>
+        <div class="etapa">
+          <h4>D: 128 × 7 × 7</h4><p class="dim">16 de 128 filtros</p>
+          <canvas id="cv-d7" width="200" height="200"></canvas>
+        </div>
+        <div class="flecha d">Linear<br>+Sigmoid</div>
+        <div class="etapa">
+          <h4>P(real)</h4><p class="dim">salida de D</p>
+          <div class="medidor"><div class="medidor-relleno" id="medidor"></div><span class="medidor-mitad"></span></div>
+          <div class="valor-grande" id="valor-d">–</div>
+          <p class="dim" id="veredicto"></p>
+        </div>
+      </div>
+
+      <div class="dos-col">
+        <div class="tarjeta">
+          <h3>Lote de 16 imágenes y su puntaje D</h3>
+          <p class="dim">Haz clic en una imagen para verla en el tubo de arriba. El Discriminador normaliza
+            el lote completo con BatchNorm, igual que durante el entrenamiento.</p>
+          <div class="galeria" id="galeria-lote"></div>
+          <p class="nota" id="promedio-lote"></p>
+        </div>
+        <div class="tarjeta">
+          <h3>Interpolación en el espacio latente</h3>
+          <p class="dim">Al mover z en línea recta de A a B, la prenda cambia de forma suave. Eso demuestra que G
+            aprendió un espacio continuo y no memorizó imágenes sueltas.</p>
+          <div class="tira" id="tira-interpolacion"></div>
+          <button class="boton" id="btn-interpolar">Nuevos extremos A y B</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 2. Arquitectura ===================== -->
+    <section id="arquitectura" class="seccion">
+      <p class="etiqueta">2 · Dónde se crea cada red y qué parámetros tiene</p>
+      <h2>Arquitectura capa por capa</h2>
+      <p class="intro">Haz clic en una capa para ver qué hace, cómo se cuentan sus parámetros y en qué parte del
+        código está. El ancho de cada barra es proporcional a su número de parámetros.</p>
+      <div class="dos-col">
+        <div class="tarjeta">
+          <div class="cabecera-red g"><h3>Red Generadora</h3><span id="total-g"></span></div>
+          <p class="codigo-ref">Se define en <code>redes.py</code> → <code>class Generador</code> · Se crea en <code>crear_generador(cfg)</code></p>
+          <div class="capas" id="capas-g"></div>
+        </div>
+        <div class="tarjeta">
+          <div class="cabecera-red d"><h3>Red Discriminadora</h3><span id="total-d"></span></div>
+          <p class="codigo-ref">Se define en <code>redes.py</code> → <code>class Discriminador</code> · Se crea en <code>crear_discriminador(cfg)</code></p>
+          <div class="capas" id="capas-d"></div>
+        </div>
+      </div>
+      <div class="tarjeta detalle-capa" id="detalle-capa"></div>
+      <div class="tarjeta">
+        <h3>Hiperparámetros</h3>
+        <div class="tabla-envoltorio"><table class="tabla" id="tabla-hiper"></table></div>
+      </div>
+    </section>
+
+    <!-- ===================== 3. Un paso de entrenamiento ===================== -->
+    <section id="paso" class="seccion">
+      <p class="etiqueta">3 · Qué ocurre en cada lote</p>
+      <h2>Un paso de entrenamiento, en 5 movimientos</h2>
+      <div class="pasos">
+        <ol class="lista-pasos" id="lista-pasos"></ol>
+        <div class="tarjeta">
+          <svg id="diagrama-paso" viewBox="0 0 960 300" role="img" aria-label="Paso de entrenamiento"></svg>
+          <pre class="codigo" id="codigo-paso"></pre>
+          <div class="controles"><button class="boton" id="btn-paso-ant">← Anterior</button>
+            <button class="boton primario" id="btn-paso-sig">Siguiente →</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 4. Funciones de pérdida ===================== -->
+    <section id="perdidas" class="seccion">
+      <p class="etiqueta">4 · Funciones de pérdida</p>
+      <h2>Entropía cruzada binaria (BCE)</h2>
+      <div class="formulas">
+        <div class="tarjeta formula"><span class="dim">Base</span>
+          <div class="eq">BCE(p, y) = −[ y·log p + (1−y)·log(1−p) ]</div></div>
+        <div class="tarjeta formula d"><span class="dim">Discriminador</span>
+          <div class="eq">L<sub>D</sub> = BCE(D(x), 0.9) + BCE(D(G(z)), 0)</div>
+          <p class="dim">Quiere D(x) → 1 y D(G(z)) → 0</p></div>
+        <div class="tarjeta formula g"><span class="dim">Generador (no saturante)</span>
+          <div class="eq">L<sub>G</sub> = BCE(D(G(z)), 1) = −log D(G(z))</div>
+          <p class="dim">Quiere D(G(z)) → 1: engañar a D</p></div>
+      </div>
+
+      <div class="dos-col">
+        <div class="tarjeta">
+          <h3>Explorador: mueve las salidas de D</h3>
+          <label class="deslizador">D(x), lo que D dice de una imagen REAL
+            <input type="range" id="sl-dx" min="0.01" max="0.99" step="0.01" value="0.85"><output id="o-dx"></output></label>
+          <label class="deslizador">D(G(z)), lo que D dice de una imagen FALSA
+            <input type="range" id="sl-dgz" min="0.01" max="0.99" step="0.01" value="0.10"><output id="o-dgz"></output></label>
+          <div class="cifras pequeñas" id="cifras-bce"></div>
+          <p class="nota" id="nota-bce"></p>
+        </div>
+        <div class="tarjeta">
+          <h3>Curvas −log(p) y −log(1−p)</h3>
+          <svg id="grafica-bce" viewBox="0 0 460 300"></svg>
+          <div class="leyenda" id="leyenda-bce"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 5. Entrenamiento ===================== -->
+    <section id="entrenamiento" class="seccion">
+      <p class="etiqueta">5 · Cómo fue el entrenamiento</p>
+      <h2>Repite el entrenamiento época por época</h2>
+      <div class="controles">
+        <button class="boton primario" id="btn-play">▶ Reproducir</button>
+        <input type="range" id="sl-epoca" min="1" value="1" class="deslizador-ancho">
+        <span class="valor-epoca">Época <strong id="txt-epoca">1</strong> / <span id="txt-total-epocas"></span></span>
+      </div>
+      <div class="fase" id="fase"></div>
+      <div class="entrena-grid">
+        <div class="tarjeta">
+          <h3>Lo que dibuja G con el mismo ruido z</h3>
+          <canvas id="cv-evolucion" width="448" height="448" class="pixelado"></canvas>
+        </div>
+        <div class="tarjeta">
+          <h3>Funciones de pérdida (por lote)</h3>
+          <svg id="grafica-perdidas" viewBox="0 0 620 260"></svg>
+          <div class="leyenda" id="leyenda-perdidas"></div>
+          <h3>Salidas del Discriminador</h3>
+          <svg id="grafica-salidas" viewBox="0 0 620 220"></svg>
+          <div class="leyenda" id="leyenda-salidas"></div>
+        </div>
+      </div>
+      <div class="cifras" id="cifras-epoca"></div>
+    </section>
+
+    <!-- ===================== 6. Pesos ===================== -->
+    <section id="pesos" class="seccion">
+      <p class="etiqueta">6 · Valores del Generador y del Discriminador</p>
+      <h2>Los pesos antes y después de entrenar</h2>
+      <p class="intro">Todos los pesos empiezan como números aleatorios pequeños, tomados de N(0, 0.02). El entrenamiento
+        los mueve. Elige una red y un tensor de pesos para ver su distribución.</p>
+      <div class="controles">
+        <div class="segmentado" id="selector-red">
+          <button data-red="generador" class="activo">Generador</button>
+          <button data-red="discriminador">Discriminador</button>
+        </div>
+        <select id="selector-tensor" class="selector"></select>
+      </div>
+      <div class="col-pesos">
+        <div class="tarjeta">
+          <h3 id="titulo-hist"></h3>
+          <svg id="grafica-hist" viewBox="0 0 460 260"></svg>
+          <div class="leyenda" id="leyenda-hist"></div>
+        </div>
+        <div class="tarjeta">
+          <h3>Estadísticas de todos los tensores</h3>
+          <div class="tabla-envoltorio"><table class="tabla" id="tabla-pesos"></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 7. Resultado ===================== -->
+    <section id="resultado" class="seccion">
+      <p class="etiqueta">7 · Resultado de la GAN</p>
+      <h2 id="titulo-resultado">Resultado</h2>
+      <div class="dos-col">
+        <div class="tarjeta">
+          <h3>Imágenes reales <span class="dim" id="prom-reales"></span></h3>
+          <div class="galeria grande" id="galeria-reales"></div>
+        </div>
+        <div class="tarjeta">
+          <h3>Imágenes generadas por G <span class="dim" id="prom-falsas"></span></h3>
+          <div class="galeria grande" id="galeria-finales"></div>
+        </div>
+      </div>
+      <div class="tarjeta">
+        <h3>Conclusión</h3>
+        <p id="conclusion"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">Proyecto <code>gan-fashion-mnist</code> · Las dos redes se ejecutan en el navegador con los pesos de
+    <code>salidas/categoria_N/*.pth</code> · Para regenerar los datos: <code>uv run gan-web</code></footer>
+
+  <div class="aviso-error" id="aviso-error" hidden>
+    No se encontró <code>datos.js</code>. Ejecute primero <code>uv run gan-entrenar</code> y luego <code>uv run gan-web</code>.
+  </div>
+
+  <script src="datos.js"></script>
+  <script src="gan.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

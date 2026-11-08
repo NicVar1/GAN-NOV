@@ -1,0 +1,813 @@
+{
+  "categoria": {
+    "indice": 7,
+    "nombre": "Zapatilla deportiva (Sneaker)",
+    "imagenes_reales": 6000
+  },
+  "hiperparametros": {
+    "categoria": 7,
+    "tam_lote": 64,
+    "tam_imagen": 28,
+    "canales_imagen": 1,
+    "dim_latente": 100,
+    "canales_base_g": 64,
+    "canales_base_d": 64,
+    "pendiente_leaky": 0.2,
+    "dropout_d": 0.3,
+    "epocas": 40,
+    "tasa_aprendizaje_g": 0.0002,
+    "tasa_aprendizaje_d": 0.0002,
+    "beta1": 0.5,
+    "beta2": 0.999,
+    "etiqueta_real": 0.9,
+    "etiqueta_falsa": 0.0,
+    "semilla": 42,
+    "carpeta_datos": "datos",
+    "carpeta_salidas": "salidas",
+    "num_muestras_fijas": 64,
+    "dispositivo": "cpu"
+  },
+  "generador": {
+    "parametros_totales": 771969,
+    "arquitectura": [
+      {
+        "indice": 0,
+        "capa": "Linear",
+        "configuracion": "in=100, out=6272, bias=False",
+        "forma_salida": [
+          6272
+        ],
+        "parametros": 627200
+      },
+      {
+        "indice": 1,
+        "capa": "BatchNorm1d",
+        "configuracion": "features=6272",
+        "forma_salida": [
+          6272
+        ],
+        "parametros": 12544
+      },
+      {
+        "indice": 2,
+        "capa": "ReLU",
+        "configuracion": "",
+        "forma_salida": [
+          6272
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 3,
+        "capa": "Unflatten",
+        "configuracion": "-> (128, 7, 7)",
+        "forma_salida": [
+          128,
+          7,
+          7
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 4,
+        "capa": "ConvTranspose2d",
+        "configuracion": "in=128, out=64, k=4, s=2, p=1",
+        "forma_salida": [
+          64,
+          14,
+          14
+        ],
+        "parametros": 131072
+      },
+      {
+        "indice": 5,
+        "capa": "BatchNorm2d",
+        "configuracion": "features=64",
+        "forma_salida": [
+          64,
+          14,
+          14
+        ],
+        "parametros": 128
+      },
+      {
+        "indice": 6,
+        "capa": "ReLU",
+        "configuracion": "",
+        "forma_salida": [
+          64,
+          14,
+          14
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 7,
+        "capa": "ConvTranspose2d",
+        "configuracion": "in=64, out=1, k=4, s=2, p=1",
+        "forma_salida": [
+          1,
+          28,
+          28
+        ],
+        "parametros": 1025
+      },
+      {
+        "indice": 8,
+        "capa": "Tanh",
+        "configuracion": "",
+        "forma_salida": [
+          1,
+          28,
+          28
+        ],
+        "parametros": 0
+      }
+    ],
+    "pesos_antes": [
+      {
+        "nombre": "red.0.weight",
+        "forma": [
+          6272,
+          100
+        ],
+        "cantidad": 627200,
+        "media": -1.027921916829655e-05,
+        "desv": 0.019970571622252464,
+        "min": -0.09047897905111313,
+        "max": 0.09271117299795151,
+        "primeros_valores": [
+          0.01838,
+          -0.00801,
+          -0.03512,
+          -0.03504,
+          -0.02007
+        ]
+      },
+      {
+        "nombre": "red.1.weight",
+        "forma": [
+          6272
+        ],
+        "cantidad": 6272,
+        "media": 0.9998021721839905,
+        "desv": 0.01984088122844696,
+        "min": 0.9260891675949097,
+        "max": 1.0728791952133179,
+        "primeros_valores": [
+          1.02897,
+          1.0091,
+          1.00643,
+          1.02108,
+          1.00801
+        ]
+      },
+      {
+        "nombre": "red.1.bias",
+        "forma": [
+          6272
+        ],
+        "cantidad": 6272,
+        "media": 0.0,
+        "desv": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "primeros_valores": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "nombre": "red.4.weight",
+        "forma": [
+          128,
+          64,
+          4,
+          4
+        ],
+        "cantidad": 131072,
+        "media": 2.6925776182906702e-05,
+        "desv": 0.020046912133693695,
+        "min": -0.09801614284515381,
+        "max": 0.08714646100997925,
+        "primeros_valores": [
+          -0.01532,
+          0.01218,
+          -0.00897,
+          -0.00439,
+          0.03091
+        ]
+      },
+      {
+        "nombre": "red.5.weight",
+        "forma": [
+          64
+        ],
+        "cantidad": 64,
+        "media": 0.9951561093330383,
+        "desv": 0.017012009397149086,
+        "min": 0.9471487402915955,
+        "max": 1.0385326147079468,
+        "primeros_valores": [
+          0.98842,
+          0.99651,
+          0.98398,
+          0.98746,
+          0.99309
+        ]
+      },
+      {
+        "nombre": "red.5.bias",
+        "forma": [
+          64
+        ],
+        "cantidad": 64,
+        "media": 0.0,
+        "desv": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "primeros_valores": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "nombre": "red.7.weight",
+        "forma": [
+          64,
+          1,
+          4,
+          4
+        ],
+        "cantidad": 1024,
+        "media": -3.951443068217486e-05,
+        "desv": 0.019406870007514954,
+        "min": -0.062085770070552826,
+        "max": 0.05527634546160698,
+        "primeros_valores": [
+          0.00852,
+          -0.02111,
+          -0.01319,
+          -0.00744,
+          -0.03578
+        ]
+      },
+      {
+        "nombre": "red.7.bias",
+        "forma": [
+          1
+        ],
+        "cantidad": 1,
+        "media": 0.0,
+        "desv": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "primeros_valores": [
+          0.0
+        ]
+      }
+    ],
+    "pesos_despues": [
+      {
+        "nombre": "red.0.weight",
+        "forma": [
+          6272,
+          100
+        ],
+        "cantidad": 627200,
+        "media": -0.00018685907707549632,
+        "desv": 0.022029388695955276,
+        "min": -0.11446496844291687,
+        "max": 0.09879641234874725,
+        "primeros_valores": [
+          0.02502,
+          -0.03254,
+          -0.02167,
+          -0.04062,
+          -0.02934
+        ]
+      },
+      {
+        "nombre": "red.1.weight",
+        "forma": [
+          6272
+        ],
+        "cantidad": 6272,
+        "media": 0.9876723289489746,
+        "desv": 0.10465243458747864,
+        "min": 0.752776563167572,
+        "max": 1.3147082328796387,
+        "primeros_valores": [
+          1.0969,
+          1.13462,
+          1.06725,
+          1.14035,
+          1.11777
+        ]
+      },
+      {
+        "nombre": "red.1.bias",
+        "forma": [
+          6272
+        ],
+        "cantidad": 6272,
+        "media": 0.0004393007548060268,
+        "desv": 0.10914499312639236,
+        "min": -0.24155019223690033,
+        "max": 0.33406516909599304,
+        "primeros_valores": [
+          0.08014,
+          0.14084,
+          0.07791,
+          0.14446,
+          0.12539
+        ]
+      },
+      {
+        "nombre": "red.4.weight",
+        "forma": [
+          128,
+          64,
+          4,
+          4
+        ],
+        "cantidad": 131072,
+        "media": -0.0005798669881187379,
+        "desv": 0.022911757230758667,
+        "min": -0.09708128869533539,
+        "max": 0.17571046948432922,
+        "primeros_valores": [
+          -0.02346,
+          0.02045,
+          -0.03303,
+          0.0002,
+          -0.00911
+        ]
+      },
+      {
+        "nombre": "red.5.weight",
+        "forma": [
+          64
+        ],
+        "cantidad": 64,
+        "media": 1.1350964307785034,
+        "desv": 0.09214401245117188,
+        "min": 0.9979051947593689,
+        "max": 1.464582085609436,
+        "primeros_valores": [
+          1.14045,
+          1.02755,
+          1.06438,
+          1.24144,
+          1.11329
+        ]
+      },
+      {
+        "nombre": "red.5.bias",
+        "forma": [
+          64
+        ],
+        "cantidad": 64,
+        "media": 0.03896909952163696,
+        "desv": 0.06945161521434784,
+        "min": -0.16580291092395782,
+        "max": 0.1312674880027771,
+        "primeros_valores": [
+          0.1095,
+          -0.0283,
+          0.03165,
+          0.01424,
+          0.01727
+        ]
+      },
+      {
+        "nombre": "red.7.weight",
+        "forma": [
+          64,
+          1,
+          4,
+          4
+        ],
+        "cantidad": 1024,
+        "media": -0.022096434608101845,
+        "desv": 0.05722897872328758,
+        "min": -0.3133118748664856,
+        "max": 0.1759052574634552,
+        "primeros_valores": [
+          -0.03721,
+          -0.06098,
+          -0.05847,
+          -0.04177,
+          -0.11628
+        ]
+      },
+      {
+        "nombre": "red.7.bias",
+        "forma": [
+          1
+        ],
+        "cantidad": 1,
+        "media": -0.08157087862491608,
+        "desv": 0.0,
+        "min": -0.08157087862491608,
+        "max": -0.08157087862491608,
+        "primeros_valores": [
+          -0.08157
+        ]
+      }
+    ]
+  },
+  "discriminador": {
+    "parametros_totales": 138689,
+    "arquitectura": [
+      {
+        "indice": 0,
+        "capa": "Conv2d",
+        "configuracion": "in=1, out=64, k=4, s=2, p=1",
+        "forma_salida": [
+          64,
+          14,
+          14
+        ],
+        "parametros": 1088
+      },
+      {
+        "indice": 1,
+        "capa": "LeakyReLU",
+        "configuracion": "pendiente=0.2",
+        "forma_salida": [
+          64,
+          14,
+          14
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 2,
+        "capa": "Dropout",
+        "configuracion": "p=0.3",
+        "forma_salida": [
+          64,
+          14,
+          14
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 3,
+        "capa": "Conv2d",
+        "configuracion": "in=64, out=128, k=4, s=2, p=1",
+        "forma_salida": [
+          128,
+          7,
+          7
+        ],
+        "parametros": 131072
+      },
+      {
+        "indice": 4,
+        "capa": "BatchNorm2d",
+        "configuracion": "features=128",
+        "forma_salida": [
+          128,
+          7,
+          7
+        ],
+        "parametros": 256
+      },
+      {
+        "indice": 5,
+        "capa": "LeakyReLU",
+        "configuracion": "pendiente=0.2",
+        "forma_salida": [
+          128,
+          7,
+          7
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 6,
+        "capa": "Dropout",
+        "configuracion": "p=0.3",
+        "forma_salida": [
+          128,
+          7,
+          7
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 7,
+        "capa": "Flatten",
+        "configuracion": "",
+        "forma_salida": [
+          6272
+        ],
+        "parametros": 0
+      },
+      {
+        "indice": 8,
+        "capa": "Linear",
+        "configuracion": "in=6272, out=1, bias=True",
+        "forma_salida": [
+          1
+        ],
+        "parametros": 6273
+      },
+      {
+        "indice": 9,
+        "capa": "Sigmoid",
+        "configuracion": "",
+        "forma_salida": [
+          1
+        ],
+        "parametros": 0
+      }
+    ],
+    "pesos_antes": [
+      {
+        "nombre": "red.0.weight",
+        "forma": [
+          64,
+          1,
+          4,
+          4
+        ],
+        "cantidad": 1024,
+        "media": -0.0005450161406770349,
+        "desv": 0.019895773380994797,
+        "min": -0.07099862396717072,
+        "max": 0.0597948394715786,
+        "primeros_valores": [
+          -0.01619,
+          -0.0017,
+          0.01797,
+          0.01801,
+          0.0144
+        ]
+      },
+      {
+        "nombre": "red.0.bias",
+        "forma": [
+          64
+        ],
+        "cantidad": 64,
+        "media": 0.0,
+        "desv": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "primeros_valores": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "nombre": "red.3.weight",
+        "forma": [
+          128,
+          64,
+          4,
+          4
+        ],
+        "cantidad": 131072,
+        "media": 7.142516551539302e-06,
+        "desv": 0.020014936104416847,
+        "min": -0.08968375623226166,
+        "max": 0.08953902870416641,
+        "primeros_valores": [
+          0.02611,
+          -0.01475,
+          0.00087,
+          -0.01659,
+          -0.01566
+        ]
+      },
+      {
+        "nombre": "red.4.weight",
+        "forma": [
+          128
+        ],
+        "cantidad": 128,
+        "media": 0.9996223449707031,
+        "desv": 0.021270887926220894,
+        "min": 0.9434909820556641,
+        "max": 1.0417158603668213,
+        "primeros_valores": [
+          1.01019,
+          0.94687,
+          1.0183,
+          0.97816,
+          0.97773
+        ]
+      },
+      {
+        "nombre": "red.4.bias",
+        "forma": [
+          128
+        ],
+        "cantidad": 128,
+        "media": 0.0,
+        "desv": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "primeros_valores": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "nombre": "red.8.weight",
+        "forma": [
+          1,
+          6272
+        ],
+        "cantidad": 6272,
+        "media": 0.00016933187725953758,
+        "desv": 0.020098494365811348,
+        "min": -0.07902932167053223,
+        "max": 0.07614623755216599,
+        "primeros_valores": [
+          0.02307,
+          -0.00795,
+          -0.00455,
+          0.03115,
+          -0.03389
+        ]
+      },
+      {
+        "nombre": "red.8.bias",
+        "forma": [
+          1
+        ],
+        "cantidad": 1,
+        "media": 0.0,
+        "desv": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "primeros_valores": [
+          0.0
+        ]
+      }
+    ],
+    "pesos_despues": [
+      {
+        "nombre": "red.0.weight",
+        "forma": [
+          64,
+          1,
+          4,
+          4
+        ],
+        "cantidad": 1024,
+        "media": 0.0002246373624075204,
+        "desv": 0.021619969978928566,
+        "min": -0.08656936138868332,
+        "max": 0.0724508985877037,
+        "primeros_valores": [
+          -0.00237,
+          -0.01791,
+          0.01347,
+          0.00629,
+          0.00564
+        ]
+      },
+      {
+        "nombre": "red.0.bias",
+        "forma": [
+          64
+        ],
+        "cantidad": 64,
+        "media": -0.010845941491425037,
+        "desv": 0.01462582778185606,
+        "min": -0.04058859124779701,
+        "max": 0.020091481506824493,
+        "primeros_valores": [
+          -0.00446,
+          -0.01611,
+          -0.00837,
+          -0.03402,
+          -0.012
+        ]
+      },
+      {
+        "nombre": "red.3.weight",
+        "forma": [
+          128,
+          64,
+          4,
+          4
+        ],
+        "cantidad": 131072,
+        "media": -0.0008884821436367929,
+        "desv": 0.023674452677369118,
+        "min": -0.13609091937541962,
+        "max": 0.12944461405277252,
+        "primeros_valores": [
+          0.01977,
+          0.01526,
+          -0.01054,
+          0.00802,
+          -0.01445
+        ]
+      },
+      {
+        "nombre": "red.4.weight",
+        "forma": [
+          128
+        ],
+        "cantidad": 128,
+        "media": 0.9856196641921997,
+        "desv": 0.02745467610657215,
+        "min": 0.9121685028076172,
+        "max": 1.0546129941940308,
+        "primeros_valores": [
+          0.998,
+          0.991,
+          1.0056,
+          0.95965,
+          0.96662
+        ]
+      },
+      {
+        "nombre": "red.4.bias",
+        "forma": [
+          128
+        ],
+        "cantidad": 128,
+        "media": -0.04323391616344452,
+        "desv": 0.02095007710158825,
+        "min": -0.11321012675762177,
+        "max": -0.007295921444892883,
+        "primeros_valores": [
+          -0.02865,
+          -0.04518,
+          -0.04979,
+          -0.06543,
+          -0.05183
+        ]
+      },
+      {
+        "nombre": "red.8.weight",
+        "forma": [
+          1,
+          6272
+        ],
+        "cantidad": 6272,
+        "media": -0.0007244202424772084,
+        "desv": 0.022030264139175415,
+        "min": -0.10413626581430435,
+        "max": 0.11046935617923737,
+        "primeros_valores": [
+          0.00891,
+          -0.02701,
+          -0.01933,
+          0.00813,
+          -0.03271
+        ]
+      },
+      {
+        "nombre": "red.8.bias",
+        "forma": [
+          1
+        ],
+        "cantidad": 1,
+        "media": 0.00026778719620779157,
+        "desv": 0.0,
+        "min": 0.00026778719620779157,
+        "max": 0.00026778719620779157,
+        "primeros_valores": [
+          0.00027
+        ]
+      }
+    ]
+  },
+  "resultado_final": {
+    "D_x_promedio": 0.4392053186893463,
+    "D_G_z_promedio": 0.3130730092525482,
+    "porcentaje_generadas_que_engañan_a_D": 4.6875,
+    "ultima_epoca": {
+      "perdida_d": 1.279377011842625,
+      "perdida_d_real": 0.745347245406079,
+      "perdida_d_falsa": 0.5340297699615519,
+      "perdida_g": 1.087721546490987,
+      "d_x": 0.5107965196973534,
+      "d_g_z_antes": 0.3897014122496369,
+      "d_g_z_despues": 0.37291698462219647,
+      "epoca": 40,
+      "segundos": 6.438563346862793
+    }
+  }
+}
